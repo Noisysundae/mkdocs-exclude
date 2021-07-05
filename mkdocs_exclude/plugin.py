@@ -62,6 +62,7 @@ class Exclude(mkdocs.plugins.BasePlugin):
     """A mkdocs plugin that removes all matching files from the input list."""
 
     config_scheme = (
+        ('prod_only', Type(bool, default=False)),
         ('glob', Type((str, list), default=None)),
         ('regex', Type((str, list), default=None)),
         ('include-glob', Type((str, list), default=None)),
@@ -71,27 +72,28 @@ class Exclude(mkdocs.plugins.BasePlugin):
     )
 
     def on_files(self, files, config):
-        for k in self.config:
-            for scheme in self.config_scheme:
-                if scheme[0] == k:
-                    break
-            else:
-                raise Exception("Configuration '%s' not found for exclude-plugin" % k)
+        if not (self.config['prod_only'] and 'serve' in sys.argv):
+            for k in self.config:
+                for scheme in self.config_scheme:
+                    if scheme[0] == k:
+                        break
+                else:
+                    raise Exception("Configuration '%s' not found for exclude-plugin" % k)
 
-        globs = get_list_from_config('glob', self.config)
-        regexes = get_list_from_config('regex', self.config)
-        include_globs = get_list_from_config('include-glob', self.config)
-        include_regexes = get_list_from_config('include-regex', self.config)
-        gitignore = self.config['gitignore']
-        exclude_decider = ExcludeDecider(globs, regexes, include_globs, include_regexes, gitignore)
-        out = []
-        for i in files:
-            name = i.src_path
-            abs_name = i.abs_src_path
-            if exclude_decider.is_include(name, abs_name):
-                print("include:",name)
-                out.append(i)
-        return mkdocs.structure.files.Files(out)
+            globs = get_list_from_config('glob', self.config)
+            regexes = get_list_from_config('regex', self.config)
+            include_globs = get_list_from_config('include-glob', self.config)
+            include_regexes = get_list_from_config('include-regex', self.config)
+            gitignore = self.config['gitignore']
+            exclude_decider = ExcludeDecider(globs, regexes, include_globs, include_regexes, gitignore)
+            out = []
+            for i in files:
+                name = i.src_path
+                abs_name = i.abs_src_path
+                if exclude_decider.is_include(name, abs_name):
+                    print("include:",name)
+                    out.append(i)
+            return mkdocs.structure.files.Files(out)
 
 def git_ignores_path(abs_path):
     r"""
