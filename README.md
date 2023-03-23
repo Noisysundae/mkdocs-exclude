@@ -20,6 +20,7 @@ This implements what people were asking for in some mkdocs bugs, such as
    plugins:
      - exclude:
          gitignore: true
+         prod_only: true
          glob:
            - exclude/this/path/*
            - "*.tmp"

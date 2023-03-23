@@ -67,8 +67,7 @@ class Exclude(mkdocs.plugins.BasePlugin):
         ('regex', Type((str, list), default=None)),
         ('include-glob', Type((str, list), default=None)),
         ('include-regex', Type((str, list), default=None)),
-        ('gitignore', Type((bool,), default=False)),
-
+        ('gitignore', Type(bool, default=False)),
     )
 
     def on_files(self, files, config):
@@ -84,8 +83,7 @@ class Exclude(mkdocs.plugins.BasePlugin):
             regexes = get_list_from_config('regex', self.config)
             include_globs = get_list_from_config('include-glob', self.config)
             include_regexes = get_list_from_config('include-regex', self.config)
-            gitignore = self.config['gitignore']
-            exclude_decider = ExcludeDecider(globs, regexes, include_globs, include_regexes, gitignore)
+            exclude_decider = ExcludeDecider(globs, regexes, include_globs, include_regexes, self.config['gitignore'])
             out = []
             for i in files:
                 name = i.src_path
