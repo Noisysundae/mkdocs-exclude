@@ -61,8 +61,6 @@ Include has higher priority over exclude.
 Setting `gitignore` to `true` will ignore files if `git` ignores them.<sup>1</sup> (This
 defaults to `false` if omitted.)
 
----
-
 <sup>1</sup> Some environments like [`tox`](https://tox.readthedocs.io/) do not pass on
 the `HOME` environment variable by default. `git` uses `HOME` to expand configurations
 like `excludesfile = ~/.gitignore`. If you rely on `git` configurations other than what
@@ -72,4 +70,3 @@ this and are unable to move the requisite configuration into your repository’s
 `.gitignore` file(s), consider exposing the `HOME` environment variable to your build
 environment, or modifying `.git/config` or `.git/info/exclude` in your local repository
 copy.
->>>>>>> c85e947 (Add `gitignore` config boolean to exclude files ignored by `git`)
