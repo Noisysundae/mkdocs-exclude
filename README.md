@@ -19,6 +19,8 @@ This implements what people were asking for in some mkdocs bugs, such as
    ```yaml
    plugins:
      - exclude:
+         gitignore: true
+         prod_only: true
          glob:
            - exclude/this/path/*
            - "*.tmp"
@@ -26,6 +28,13 @@ This implements what people were asking for in some mkdocs bugs, such as
            - "*.gz"
          regex:
            - '.*\.(tmp|bin|tar)$'
+         include-glob:
+           - include/this/path/*
+           - "*.png"
+           - "*.md"
+           - "assets/**" # the material theme requires this folder
+         include-regex:
+           - '.*\.(js|css)$'
    ```
 
 You can provide zero or more patterns of each type.  (If you don't provide
@@ -41,3 +50,23 @@ quoted.
 When writing regexes, it's best to use single quotes rather than double
 quotes, so that your regex backslash escapes are preserved correctly without
 having to be doubled up.
+
+## Exclude and Include
+
+It is possible to exclude and include. For example you could exclude `*` but include `*.md`.
+Include has higher priority over exclude.
+
+## Gitignore
+
+Setting `gitignore` to `true` will ignore files if `git` ignores them.<sup>1</sup> (This
+defaults to `false` if omitted.)
+
+<sup>1</sup> Some environments like [`tox`](https://tox.readthedocs.io/) do not pass on
+the `HOME` environment variable by default. `git` uses `HOME` to expand configurations
+like `excludesfile = ~/.gitignore`. If you rely on `git` configurations other than what
+lives in your repository, this can lead to disparities between what you observe when
+running `git` in your shell versus what gets ignored by this plugin. If you experience
+this and are unable to move the requisite configuration into your repository’s
+`.gitignore` file(s), consider exposing the `HOME` environment variable to your build
+environment, or modifying `.git/config` or `.git/info/exclude` in your local repository
+copy.
