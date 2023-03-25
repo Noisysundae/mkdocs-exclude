@@ -2,6 +2,7 @@ import fnmatch
 import re
 import os
 import subprocess
+import sys
 import mkdocs
 import mkdocs.plugins
 import mkdocs.structure.files
